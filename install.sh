@@ -1,8 +1,12 @@
 #install emacs
 export DOTFILES=$HOME/dotfiles
 
-ln -s -i $DOTFILES/.emacs.d $HOME/.emacs.d
-ln -s -i $DOTFILES/.gitconfig $HOME/.gitconfig
+if [ -d $HOME/.emacs.d ] ; then
+    rm -r $HOME/.emacs.d
+fi
+
+ln -s $DOTFILES/.emacs.d $HOME
+ln -s -i $DOTFILES/.gitconfig $HOME
 
 mkdir -p $DOTFILES/.emacs.d/elisp
 mkdir -p $DOTFILES/.emacs.d/conf
