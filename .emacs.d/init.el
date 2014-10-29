@@ -26,7 +26,7 @@
 
 (require 'package)
 (add-to-list 'package-archives
-	       '("marmalade" . "http://marmalade-repo.org./packages/"))
+	     '("marmalade" . "http://marmalade-repo.org./packages/"))
 (add-to-list 'package-archives '("ELPA" . "http://tromey.com/elpa/"))
 (add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/"))
 (package-initialize)
@@ -41,21 +41,37 @@
     markdown-mode
     auto-complete
     flymake
-    anything
+    helm
     flymake-php
     redo+
     perl-completion
     web-mode
+    magit
+    quickrun
     ))
+(defun installing-package-list-installed-p ()
+  (loop for p in installing-package-list
+        when (not (package-installed-p p)) do (return nil)
+        finally (return t)))
+ 
+(unless (installing-package-list-installed-p)
+  ;; check for new packages (package versions)
+  (package-refresh-contents)
+  ;; install the missing packages
+  (dolist (p installing-package-list)
+    (when (not (package-installed-p p))
+      (package-install p))))
 
-(let ((not-installed (loop for x in installing-package-list
-			   when (not (package-installed-p x))
-			   collect x)))
-  (when not-installed
-    (package-refresh-contents)
-    (dolist (pkg not-installed)
-      (package-install pkg))))
+;;helm
+(when (require 'helm-config nil t)
+  (helm-mode 1)
 
+  (define-key global-map (kbd "M-x")     'helm-M-x)
+  (define-key global-map (kbd "C-x C-f") 'helm-find-files)
+  (define-key global-map (kbd "C-x C-r") 'helm-recentf)
+  (define-key global-map (kbd "M-y")     'helm-show-kill-ring)
+  (define-key global-map (kbd "C-c i")   'helm-imenu)
+  (define-key global-map (kbd "C-x b")   'helm-buffers-list))
 
 ;; color-theme
 (when (require 'color-theme nil t)
@@ -80,25 +96,6 @@
   (add-to-list 'auto-mode-alist '("\\.ctp\\'" . php-mode))
   (setq php-search-url "http://jp.php.net/ja/")
   (setq php-manual-url "http://jp.php.net/manual/ja/"))
-;;anything
-;; (auto-install-batch "anything")
-;; anything config
-(when (require 'anything-config nil t)
-  (setq anything-sources (list anything-c-source-buffers
-			       anything-c-source-file-name-history
-			       anything-c-source-complex-command-history
-			       anything-c-source-imenu
-			       anything-c-source-emacs-commands
-			       anything-c-source-locate))
-
-  (setq anything-filtered-candidate-transformers
-	'((buffer   . anything-c-adaptive-sort)
-	  (file     . anything-c-adaptive-sort)
-	  (command  . anything-c-adaptive-sort)
-	  (function . anything-c-adaptive-sort)
-	  (sexp     . anything-c-adaptive-sort)))
-
-  (global-set-key (kbd "<C-menu>") 'anything))
 
 ;; indent setting of php-mode
 (defun php-indent-hook ()
