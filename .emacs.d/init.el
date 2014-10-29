@@ -46,6 +46,8 @@
     redo+
     perl-completion
     web-mode
+    magit
+    quickrun
     ))
 (defun installing-package-list-installed-p ()
   (loop for p in installing-package-list
@@ -59,6 +61,17 @@
   (dolist (p installing-package-list)
     (when (not (package-installed-p p))
       (package-install p))))
+
+;;helm
+(when (require 'helm-config nil t)
+  (helm-mode 1)
+
+  (define-key global-map (kbd "M-x")     'helm-M-x)
+  (define-key global-map (kbd "C-x C-f") 'helm-find-files)
+  (define-key global-map (kbd "C-x C-r") 'helm-recentf)
+  (define-key global-map (kbd "M-y")     'helm-show-kill-ring)
+  (define-key global-map (kbd "C-c i")   'helm-imenu)
+  (define-key global-map (kbd "C-x b")   'helm-buffers-list))
 
 ;; color-theme
 (when (require 'color-theme nil t)
