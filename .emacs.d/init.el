@@ -24,12 +24,13 @@
   ;; enable install-elisp function
   (auto-install-compatibility-setup))
 
-(require 'package)
-(add-to-list 'package-archives
+(when (< emacs-major-version 24)
+  (require 'package)
+  (add-to-list 'package-archives
 	       '("marmalade" . "http://marmalade-repo.org./packages/"))
-(add-to-list 'package-archives '("ELPA" . "http://tromey.com/elpa/"))
-(add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/"))
-(package-initialize)
+  (add-to-list 'package-archives '("ELPA" . "http://tromey.com/elpa/"))
+  (add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/"))
+  (package-initialize))
 
 (require `cl)
 (defvar installing-package-list	
@@ -41,7 +42,7 @@
     markdown-mode
     auto-complete
     flymake
-    anything
+    helm
     flymake-php
     redo+
     perl-completion
@@ -80,25 +81,6 @@
   (add-to-list 'auto-mode-alist '("\\.ctp\\'" . php-mode))
   (setq php-search-url "http://jp.php.net/ja/")
   (setq php-manual-url "http://jp.php.net/manual/ja/"))
-;;anything
-;; (auto-install-batch "anything")
-;; anything config
-(when (require 'anything-config nil t)
-  (setq anything-sources (list anything-c-source-buffers
-			       anything-c-source-file-name-history
-			       anything-c-source-complex-command-history
-			       anything-c-source-imenu
-			       anything-c-source-emacs-commands
-			       anything-c-source-locate))
-
-  (setq anything-filtered-candidate-transformers
-	'((buffer   . anything-c-adaptive-sort)
-	  (file     . anything-c-adaptive-sort)
-	  (command  . anything-c-adaptive-sort)
-	  (function . anything-c-adaptive-sort)
-	  (sexp     . anything-c-adaptive-sort)))
-
-  (global-set-key (kbd "<C-menu>") 'anything))
 
 ;; indent setting of php-mode
 (defun php-indent-hook ()
