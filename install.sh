@@ -15,5 +15,6 @@ mkdir -p $DOTFILES/.emacs.d/url
 mkdir -p $DOTFILES/.emacs.d/elpa
 mkdir -p $DOTFILES/.emacs.d/inits
 
-wget http://bit.ly/pkg-el23 -O package.el
-mv $DOTFILES/package.el $DOTFILES/.emacs.d/inits
+# for emacs23
+# wget http://bit.ly/pkg-el23 -O package.el
+# mv $DOTFILES/package.el $DOTFILES/.emacs.d/inits
