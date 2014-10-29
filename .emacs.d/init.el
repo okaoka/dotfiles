@@ -24,13 +24,12 @@
   ;; enable install-elisp function
   (auto-install-compatibility-setup))
 
-(when (< emacs-major-version 24)
-  (require 'package)
-  (add-to-list 'package-archives
-	       '("marmalade" . "http://marmalade-repo.org./packages/"))
-  (add-to-list 'package-archives '("ELPA" . "http://tromey.com/elpa/"))
-  (add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/"))
-  (package-initialize))
+(require 'package)
+(add-to-list 'package-archives
+	     '("marmalade" . "http://marmalade-repo.org./packages/"))
+(add-to-list 'package-archives '("ELPA" . "http://tromey.com/elpa/"))
+(add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/"))
+(package-initialize)
 
 (require `cl)
 (defvar installing-package-list	
@@ -48,15 +47,18 @@
     perl-completion
     web-mode
     ))
-
-(let ((not-installed (loop for x in installing-package-list
-			   when (not (package-installed-p x))
-			   collect x)))
-  (when not-installed
-    (package-refresh-contents)
-    (dolist (pkg not-installed)
-      (package-install pkg))))
-
+(defun installing-package-list-installed-p ()
+  (loop for p in installing-package-list
+        when (not (package-installed-p p)) do (return nil)
+        finally (return t)))
+ 
+(unless (installing-package-list-installed-p)
+  ;; check for new packages (package versions)
+  (package-refresh-contents)
+  ;; install the missing packages
+  (dolist (p installing-package-list)
+    (when (not (package-installed-p p))
+      (package-install p))))
 
 ;; color-theme
 (when (require 'color-theme nil t)
