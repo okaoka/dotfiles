@@ -48,6 +48,7 @@
     web-mode
     magit
     quickrun
+    plsense
     ))
 (defun installing-package-list-installed-p ()
   (loop for p in installing-package-list
