@@ -6,6 +6,7 @@ if [ -d $HOME/.emacs.d ] ; then
 fi
 
 ln -s $DOTFILES/.emacs.d $HOME
+gpg $DOTFILES/.gitconfig
 ln -s -i $DOTFILES/.gitconfig $HOME
 
 mkdir -p $DOTFILES/.emacs.d/elisp
